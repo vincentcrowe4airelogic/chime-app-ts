@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect, HtmlHTMLAttributes } from 'react'
 import { ConsoleLogger, DefaultDeviceController, DefaultMeetingSession, LogLevel, MeetingSessionConfiguration } from 'amazon-chime-sdk-js';
-import { join } from 'path';
   
 interface IMeetingInfo {
     started: boolean,
@@ -19,7 +18,7 @@ export const Meeting = () => {
     const audioRef = useRef<HTMLAudioElement>(null!);
 
     const startMeeting = async () => {
-        fetch('https://rrz7e3wd7l.execute-api.eu-west-2.amazonaws.com/dev/room', {method: 'POST'})
+        fetch('https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/room', {method: 'POST'})
         .then(resp => resp.json())
         .then(json =>
             setMeetingInfo({ started: true, meeting: json.meeting, attendee: json.attendee })
@@ -27,7 +26,7 @@ export const Meeting = () => {
     }
 
     const joinMeeting = async () => {
-        fetch('https://rrz7e3wd7l.execute-api.eu-west-2.amazonaws.com/dev/join', {method: 'POST'})
+        fetch('https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/join', {method: 'POST'})
         .then(resp => resp.json())
         .then(json =>
             setMeetingInfo({ started: true, meeting: json.meeting, attendee: json.attendee })
