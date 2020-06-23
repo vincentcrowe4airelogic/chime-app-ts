@@ -56,7 +56,7 @@ export const PatientIntro: React.FC = () => {
   const [ ready, setReady ] = React.useState(false);
 
   React.useEffect(() => {
-    fetch('https://rrz7e3wd7l.execute-api.eu-west-2.amazonaws.com/dev/room', {method: 'POST'})
+    fetch('https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/slot?slot=' + slotId)
       .then(resp => resp.json())
       .then(json =>
         setSlotInfo({ subjectName: 'Vincent', hostName: 'The Doctor', meeting: json.meeting, attendee: json.attendee  })
