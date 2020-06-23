@@ -67,6 +67,7 @@ export const PatientIntro: React.FC = () => {
   React.useEffect(() => {
     if(chime.state == "initialised") {
       chime.startPreview(localPreview.current);
+      chime.prepareMeeting();
     }
 
   }, [chime.state])

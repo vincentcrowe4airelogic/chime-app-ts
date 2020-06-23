@@ -29,7 +29,7 @@ export default function ClinicianRoom(props: IClinicianRoomProps) {
     chime.initialiseMeeting({
       meeting: slotInfo.meeting,
       attendee: slotInfo.attendee
-    });
+    }); 
   }
   }, [slotInfo])
 

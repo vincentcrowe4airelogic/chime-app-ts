@@ -78,7 +78,7 @@ export default function ClinicianPage() {
           SlotId: '',
         },
       ])
-    );
+    ); 
 
     fetch('https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/slot', {
       method: 'POST',

@@ -12,6 +12,7 @@ export interface IChimeContext {
     audioVideo: any;
     state: 'initialising' | 'initialised' | 'ready' | 'joined';
     participants: any[];
+    meetingId: string;
 }
 
 export const ChimeContext = createContext<IChimeContext>(null!);
@@ -23,6 +24,7 @@ export const ChimeProvider = (props: any) => {
     const [ audioVideo, setAudioVideo ] = useState<any|null>(null);
     const [ participants, setParticipants ] = useState<any[]>([] as any[]);
     const [ state, setState ] = useState<'initialising' | 'initialised' | 'ready' | 'joined'>('initialising');
+    const [meetingId, setMeetingId] = useState("");
 
     const initialiseMeeting = (meetingInfo: any) : void => {
         const configuration = new MeetingSessionConfiguration(meetingInfo.meeting, meetingInfo.attendee);
@@ -36,6 +38,7 @@ export const ChimeProvider = (props: any) => {
         setAudioVideo(meetingSession.audioVideo);
         setMeetingSession(meetingSession);
         setState('initialised')
+        setMeetingId(JSON.stringify(meetingInfo));
     }
 
     const startPreview = async (videoElement: HTMLVideoElement) => {
@@ -59,6 +62,7 @@ export const ChimeProvider = (props: any) => {
         const observer = {
             // videoTileDidUpdate is called whenever a new tile is created or tileState changes.
             videoTileDidUpdate: (tileState : any) => {
+              console.log("tile update");
               // Ignore a tile without attendee ID and other attendee's tile.
               if(tileState.localTile)
                 return;
@@ -100,7 +104,8 @@ export const ChimeProvider = (props: any) => {
             meetingSession, 
             audioVideo,
             state,
-            participants}} >
+            participants,
+            meetingId}} >
             {props.children}
         </ChimeContext.Provider>
     )

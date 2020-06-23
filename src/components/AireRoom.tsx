@@ -82,9 +82,13 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
   const chime = useChimeContext();
 
   React.useEffect(() => {
-      chime.startPreview(localVideo.current);
-      chime.join(audioElement.current);
+      startMeeting();
   }, [])
+
+  const startMeeting = async () => {
+    await chime.startPreview(localVideo.current);
+      chime.join(audioElement.current);
+  }
 
   const renderMainVideo = () => {
     if (chime.participants.length > 0) {
@@ -121,6 +125,9 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
         <Button variant="contained" onClick={() => alert('not implemented')}>
           Disconnect
         </Button>
+        <div>{chime.state}</div>
+        <div>{chime.meetingId}</div>
+        <div>{`${chime.participants.length} participants`} </div>
         <div>{renderMainVideo()}</div>
         <div className={styles.smallVideo}>
             <video muted ref={localVideo} />
