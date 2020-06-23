@@ -1,6 +1,5 @@
-import React, { useRef, useState, useEffect, HtmlHTMLAttributes } from 'react'
-import { ConsoleLogger, DefaultDeviceController, DefaultMeetingSession, LogLevel, MeetingSessionConfiguration } from 'amazon-chime-sdk-js';
-import { join } from 'path';
+import React, { useRef, useState, useEffect } from 'react';
+import { useChimeContext } from '../context/ChimeSdk';
   
 interface IMeetingInfo {
     started: boolean,
@@ -9,10 +8,8 @@ interface IMeetingInfo {
 }
 
 export const Meeting = () => {
-    const logger = new ConsoleLogger('MyLogger', LogLevel.INFO);
-    const deviceController = new DefaultDeviceController(logger);
     const [ meetingInfo, setMeetingInfo ] = useState<IMeetingInfo>({ started: false, meeting: {}, attendee: {}});
-    const [ meetingSession, setMeetingSession ] = useState<any|null>(null);
+    const chimeContext = useChimeContext();
 
     const localVideo = useRef<HTMLVideoElement>(null!);
     const remoteVideo = useRef<HTMLVideoElement>(null!);
@@ -35,70 +32,41 @@ export const Meeting = () => {
     }
 
     const startPreview = async () => {
-        const videoInputDevices = await meetingSession.audioVideo.listVideoInputDevices();
-        const videoInputDeviceInfo = videoInputDevices[0];
-        await meetingSession.audioVideo.chooseVideoInputDevice(videoInputDeviceInfo.deviceId);
-
-        meetingSession.audioVideo.startVideoPreviewForVideoInput(localVideo.current);
-
-        await connectDevices();
+        await chimeContext.prepareMeeting();
+        chimeContext.startPreview(localVideo.current);
     }
 
     useEffect(() => {
-
         if(!meetingInfo.started)
             return;
 
-        console.log(meetingInfo);
-
-        const configuration = new MeetingSessionConfiguration(meetingInfo.meeting, meetingInfo.attendee);
-                
-        const meetingSession = new DefaultMeetingSession(
-          configuration,
-          logger,
-          deviceController
-        );
-
-        setMeetingSession(meetingSession);
-
+        chimeContext.initialiseMeeting(meetingInfo);        
     }, [meetingInfo] )
 
     useEffect(() => {
-        if(meetingSession != null)
+        if(chimeContext.meetingSession != null)
             startPreview();
-    }, [meetingSession])
+    }, [chimeContext.meetingSession])
 
-    const connectDevices = async () => {
-        const audioInputDevices = await meetingSession.audioVideo.listAudioInputDevices();
-        const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
-        
-        const audioInputDeviceInfo = audioInputDevices[0];
-        await meetingSession.audioVideo.chooseAudioInputDevice(audioInputDeviceInfo.deviceId);
+    useEffect(() => {
+        showConnectedUser();
+    }, [chimeContext.participants])
 
-        const audioOutputDeviceInfo = audioOutputDevices[0];
-        await meetingSession.audioVideo.chooseAudioOutputDevice(audioOutputDeviceInfo.deviceId);
+    useEffect(() => {
+        if(chimeContext.state == 'ready')
+        {
+            chimeContext.join(audioRef.current);
+        }
+        else if(chimeContext.state == 'joined')
+            showConnectedUser();
+    }, [chimeContext.state])
 
-        meetingSession.audioVideo.bindAudioElement(audioRef.current);
-        
-        const observer = {
-            // videoTileDidUpdate is called whenever a new tile is created or tileState changes.
-            videoTileDidUpdate: (tileState : any) => {
-              // Ignore a tile without attendee ID and other attendee's tile.
-              if(tileState.localTile)
-                return;
-              
-              meetingSession.audioVideo.bindVideoElement(tileState.tileId, remoteVideo.current);
-            },
-            audioVideoDidStart() {
-                console.log("local started");
-                meetingSession.audioVideo.startLocalVideoTile();
-            }
-          };
-          
-          meetingSession.audioVideo.addObserver(observer);
-          meetingSession.audioVideo.start();
-    }
-
+    const showConnectedUser = () => {
+        if(chimeContext.participants.length > 0) {
+            chimeContext.connect(remoteVideo.current);
+        }
+    } 
+    
     return (
         <>
         <audio ref={audioRef} />
