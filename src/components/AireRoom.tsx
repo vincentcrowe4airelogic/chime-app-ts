@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, Theme, createStyles, Button } from '@material-ui/core';
+import { makeStyles, Theme, createStyles, Button, Container, Grid } from '@material-ui/core';
 import { IPatientDetails } from './Patient/PatientDetails';
 import { useChimeContext } from '../context/ChimeSdk';
 
@@ -50,6 +50,16 @@ const useStyles = makeStyles((theme: Theme) =>
       border: 'solid 1px green',
       background: '#333',
     },
+    videoSmall: {
+      width: '200px',
+      height: "auto"
+    },
+    videoLarge: {
+      width: '500px',
+      height: "auto"
+    }
+
+
   })
 );
 
@@ -59,6 +69,7 @@ interface IAireRoomProps {
 
 interface IVideoTileProps {
     tileInfo: any;
+    className: string;
 }
 
 const VideoTile = (props: IVideoTileProps) => {
@@ -71,7 +82,7 @@ const VideoTile = (props: IVideoTileProps) => {
     }, [])
 
     return (
-        <video ref={videoElement} />
+        <video ref={videoElement} className={props.className}/>
     )
 }
 
@@ -94,9 +105,7 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
     if (chime.participants.length > 0) {
       return (
         <React.Fragment>
-          <div className={styles.bigVideo}>
-            <VideoTile tileInfo={chime.participants[0]} />            
-          </div>
+            <VideoTile tileInfo={chime.participants[0]} className={styles.videoLarge}/>             
         </React.Fragment>
       );
     } else {
@@ -121,20 +130,23 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
 
   return (
     <>
-      <div className={styles.videoContainer}>
-        <Button variant="contained" onClick={() => alert('not implemented')}>
+      <Container maxWidth="sm">
+        <Grid container
+        justify="center"
+        alignItems="flex-start">
+        {/* <Button variant="contained" onClick={() => alert('not implemented')}>
           Disconnect
-        </Button>
-        <div>{chime.state}</div>
-        <div>{chime.meetingId}</div>
-        <div>{`${chime.participants.length} participants`} </div>
-        <div>{renderMainVideo()}</div>
-        <div className={styles.smallVideo}>
-            <video muted ref={localVideo} />
-        </div>
-        {renderPatientDetails()}
+        </Button> */}
+        <Grid item xs={8}>
+        {renderMainVideo()}
+        </Grid>
+        <Grid item xs={3}>
+            <video muted ref={localVideo} className={styles.videoSmall} />
+        </Grid>
+        {renderPatientDetails()} 
         <audio ref={audioElement} />
-      </div>
+        </Grid>
+      </Container>
     </>
   );
 };

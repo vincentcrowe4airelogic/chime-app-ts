@@ -62,12 +62,10 @@ export const ChimeProvider = (props: any) => {
         const observer = {
             // videoTileDidUpdate is called whenever a new tile is created or tileState changes.
             videoTileDidUpdate: (tileState : any) => {
-              console.log("tile update");
               // Ignore a tile without attendee ID and other attendee's tile.
               if(tileState.localTile)
                 return;
 
-                alert("remote connection");
                 setParticipants([...participants, tileState]);
             },
             audioVideoDidStart: () => {
