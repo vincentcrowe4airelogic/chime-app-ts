@@ -4,6 +4,7 @@ import { Button, makeStyles, createStyles, Theme, responsiveFontSizes } from '@m
 import { usePatientService } from '../Patient/PatientDetails';
 import { useChimeContext } from '../../context/ChimeSdk';
 import { AireRoom } from '../AireRoom';
+import ISlotInfo from '../../interfaces/ISlotInfo';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,12 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ISlotInfo {
-  subjectName: string;
-  hostName: string;
-  meeting: any;
-  attendee: any;
-}
+
 
 export const PatientIntro: React.FC = () => {
   const styles = useStyles();

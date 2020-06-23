@@ -97,6 +97,7 @@ export default function ClinicianPage() {
   };
 
   const joinSlot = (slotId: string) => {
+    console.log(`setting slot to: ${slotId}`)
     setCurrentSlot(slotId);
   };
 
@@ -127,7 +128,7 @@ export default function ClinicianPage() {
         )}
       </Container>
       {currentSlot != '' && (
-        <React.Fragment/>
+        <ClinicianRoom slotId={currentSlot}/>
       )}
     </React.Fragment>
   );
