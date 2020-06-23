@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, makeStyles, createStyles, Theme } from '@material-ui/core';
+import { Button, makeStyles, createStyles, Theme, responsiveFontSizes } from '@material-ui/core';
 import { usePatientService } from '../Patient/PatientDetails';
 import { useChimeContext } from '../../context/ChimeSdk';
 import { AireRoom } from '../AireRoom';
@@ -59,7 +59,7 @@ export const PatientIntro: React.FC = () => {
     fetch('https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/slot?slot=' + slotId)
       .then(resp => resp.json())
       .then(json =>
-        setSlotInfo({ subjectName: 'Vincent', hostName: 'The Doctor', meeting: json.meeting, attendee: json.attendee  })
+        setSlotInfo({ subjectName: json.slotInfo.SubjectName, hostName: json.slotInfo.HostName, meeting: json.meeting, attendee: json.attendee  })
       );
   }, []);
 
@@ -75,7 +75,12 @@ export const PatientIntro: React.FC = () => {
 
   }, [chime.state])
 
-  const connectRoom = () => {
+  const connectRoom = async () => {
+    await fetch(`https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/slot/update`, {
+      method:"POST",
+      body: JSON.stringify({slotId :slotId, subjectName: slotInfo.subjectName, status: "connected"})
+    });
+
     setReady(true);
   };
 

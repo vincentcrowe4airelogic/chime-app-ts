@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { usePatientService } from '../Patient/PatientDetails';
+import { AireRoom } from '../AireRoom';
 
 interface IClinicianRoomProps {
   slotId: string;
@@ -20,5 +21,5 @@ export default function ClinicianRoom(props: IClinicianRoomProps) {
     }
   }, [props.slotId]);
 
-  return <div>{}</div>;
+  return <div><AireRoom/></div>;
 }

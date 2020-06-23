@@ -7,6 +7,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import ClinicianRoom from './ClinicianRoom';
 import IPatientSlot from '../../interfaces/IPatientSlot';
 import ClinicianSlot from './CinicianSlot';
+import { useChimeContext } from '../../context/ChimeSdk';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,6 +56,8 @@ export default function ClinicianPage() {
   const [name, setName] = useState('');
   const [slots, setSlots] = useState([] as IPatientSlot[]);
   const [currentSlot, setCurrentSlot] = useState('');
+  const chime = useChimeContext();
+
 
   useEffect(() => {
     getSlots();
