@@ -3,11 +3,36 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
+import theme from './theme';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import ClinicianPage from './components/Clinician/ClinicianPage';
+import PatientPage from './components/Patient/PatientPage';
+import { PatientIntro } from './components/Patient/PatientIntro';
+import { ChimeProvider } from './context/ChimeSdk';
+
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <MuiThemeProvider theme={theme}>
+    <ChimeProvider>
+    <CssBaseline />
+    <Router>
+        <Switch>
+          <Route exact path="/">
+          <ClinicianPage />
+          </Route>
+          <Route path="/clinician">
+            <ClinicianPage />
+          </Route>
+          <Route path="/slot/:slotId">
+              <PatientIntro />
+          </Route>
+          <Redirect to="/" />
+        </Switch>
+    </Router>
+    </ChimeProvider>
+  </MuiThemeProvider>,
   document.getElementById('root')
 );
 
