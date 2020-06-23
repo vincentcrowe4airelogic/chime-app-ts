@@ -110,7 +110,7 @@ export const PatientIntro: React.FC = () => {
           )}
         </div>
         <div className={styles.localPreview}>
-          <video muted ref={localPreview} className={styles.localPreview} />
+          <video muted ref={localPreview} style={{width: "100%"}} />
         </div>
       </>
     );
