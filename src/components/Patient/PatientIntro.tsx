@@ -51,7 +51,7 @@ export const PatientIntro: React.FC = () => {
 
 
   React.useEffect(() => {
-    fetch('https://rgqra2u25c.execute-api.eu-west-2.amazonaws.com/dev/v2/token?slot=' + slotId)
+    fetch('https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/slot?slot=' + slotId)
       .then(resp => resp.json())
       .then(json =>
         setSlotInfo({ subjectName: json.slotInfo.SubjectName, hostName: json.slotInfo.HostName, token: json.token })

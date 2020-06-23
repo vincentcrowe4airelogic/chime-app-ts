@@ -77,14 +77,14 @@ export default function ClinicianPage() {
       ])
     );
 
-    fetch('https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/v2/slot', {
+    fetch('https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/slot', {
       method: 'POST',
       body: JSON.stringify({ subjectName: name, hostName: 'Doctor' }),
     });
   };
 
   const getSlots = () => {
-    fetch(`https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/v2/slots`)
+    fetch(`https://mbsnz79c79.execute-api.eu-west-2.amazonaws.com/dev/slots`)
       .then(response => response.json())
       .then(response => setSlots(response.slots));
   };
