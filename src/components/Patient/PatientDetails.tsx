@@ -9,7 +9,7 @@ export interface IPatientDetails {
 }
 
 export const usePatientService = () => {
-  const [patient, setPatient] = useState<IPatientDetails | null>(null);
+  const [patient, setPatient] = useState<IPatientDetails | null>(null); 
   const getPatient = (patientId: string) => {
     getPatientDetails(patientId).then(pd => setPatient(pd));
   };
@@ -26,5 +26,5 @@ const getPatientDetails = async (patientId: string) => {
       NhsNumber: '123456789',
       Postcode: 'LS12 1FS',
     });
-  });
+  }); 
 };

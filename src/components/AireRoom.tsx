@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, Theme, createStyles, Button, Container, Grid, IconButton } from '@material-ui/core';
+import { makeStyles, Theme, createStyles, Button, Container, Grid, IconButton, Slider } from '@material-ui/core';
 import MicIcon from '@material-ui/icons/Mic';
 import MicOffIcon from '@material-ui/icons/MicOff';
 
@@ -98,6 +98,7 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
   const audioElement = React.useRef<HTMLAudioElement>(null!);
   const chime = useChimeContext();
   const [muted, setMuted] = useState(false);
+  const [volume, setVolume] = useState(-1);
 
   React.useEffect(() => {
       startMeeting();
@@ -105,7 +106,8 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
 
   const startMeeting = async () => {
     await chime.startPreview(localVideo.current);
-      chime.join(audioElement.current);
+    chime.join(audioElement.current);
+    chime.subscribeToMyVolume(handleVolumeChange);
   }
 
   const renderMainVideo = () => {
@@ -123,6 +125,13 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
   const toggleMute = () => {
     chime.toggleMute();
     setMuted(chime.isMuted());
+  }
+
+  const handleVolumeChange = (attendeeId : any, volume :any, muted:any, signalStrength: any) => {
+    if(volume != null)
+    {
+    setVolume(volume);
+    }
   }
 
   const renderPatientDetails = () => {
@@ -157,6 +166,8 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
             <IconButton onClick={toggleMute} color="secondary" aria-label="Toggle mute">
               {muted ? <MicOffIcon/> : <MicIcon/>}
             </IconButton>
+            {volume >= 0 && 
+            <Slider disabled max={1} min={0} value={volume} aria-labelledby="disabled-slider" />}
             {renderPatientDetails()} 
         </Grid>
         <audio ref={audioElement} />

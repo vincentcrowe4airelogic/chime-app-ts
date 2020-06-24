@@ -11,10 +11,11 @@ export interface IChimeContext {
     meetingSession: any;
     audioVideo: any;
     state: 'initialising' | 'initialised' | 'ready' | 'joined';
-    participants: any[];
+    participants: any[]; 
     meetingId: string;
     toggleMute: () => void;
     isMuted: () => boolean;
+    subscribeToMyVolume: (callback: (attendeeId : any, volume :any, muted:any, signalStrength: any) => void) => void;
 }
 
 export const ChimeContext = createContext<IChimeContext>(null!);
@@ -103,6 +104,11 @@ export const ChimeProvider = (props: any) => {
             setAudioVideo(meetingSession.audioVideo);
     }, [meetingSession])
 
+    const subscribeToMyVolume = (callback: (attendeeId : any, volume :any, muted:any, signalStrength: any) => void) => {
+        const presentAttendeeId = meetingSession.configuration.credentials.attendeeId;
+        meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator(presentAttendeeId, callback);
+    }
+
     return (
         <ChimeContext.Provider value={{
             initialiseMeeting, 
@@ -116,7 +122,8 @@ export const ChimeProvider = (props: any) => {
             participants,
             meetingId,
             toggleMute,
-            isMuted}} >
+            isMuted,
+            subscribeToMyVolume}} >
             {props.children}
         </ChimeContext.Provider>
     )
