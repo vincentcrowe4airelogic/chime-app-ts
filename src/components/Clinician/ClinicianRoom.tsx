@@ -21,7 +21,9 @@ export default function ClinicianRoom(props: IClinicianRoomProps) {
       .then(json =>
         setSlotInfo({ subjectName: json.slotInfo.SubjectName, hostName: json.slotInfo.HostName, meeting: json.meeting, attendee: json.attendee  })
       );
+      getPatient("test");
     }
+
   }, [props.slotId]);
 
   useEffect(() => {
@@ -43,6 +45,6 @@ export default function ClinicianRoom(props: IClinicianRoomProps) {
   }, [chime.state])
 
   return (<>
-    {(chime.state=="ready" || chime.state=="joined") && <AireRoom/>}
+    {(chime.state=="ready" || chime.state=="joined") && <AireRoom participantName={slotInfo.subjectName} patientDetails={patient}/>}
     </>);
 }

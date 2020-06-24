@@ -119,7 +119,7 @@ export const PatientIntro: React.FC = () => {
   const renderRoom = () => {
     if (!ready) return;
 
-    return (<AireRoom />)
+    return (<AireRoom participantName={slotInfo.hostName} />)
   };
 
   return (

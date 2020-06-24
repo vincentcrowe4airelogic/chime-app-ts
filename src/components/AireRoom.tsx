@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     patientDetails: {
       padding: '5px',
-      position: 'absolute',
       width: '260px',
       height: '400px',
       top: '250px',
@@ -51,12 +50,14 @@ const useStyles = makeStyles((theme: Theme) =>
       background: '#333',
     },
     videoSmall: {
-      width: '200px',
-      height: "auto"
+      // width: '200px',
+      // height: "auto"
+      width: "100%"
     },
     videoLarge: {
-      width: '500px',
-      height: "auto"
+      // width: '500px',
+      // height: "auto"
+      width: "100%"
     }
 
 
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IAireRoomProps {
   patientDetails?: IPatientDetails | null;
+  participantName?: string;
 }
 
 interface IVideoTileProps {
@@ -109,7 +111,7 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
         </React.Fragment>
       );
     } else {
-      return <div className={styles.title}>We have told the doctor you've arrived. They will be with you shortly</div>;
+      return <div className={styles.title}>We have told {props.participantName ? props.participantName : "The doctor"} you've arrived. They will be with you shortly</div>;
     }
   };
 
@@ -117,7 +119,7 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
     if (!props.patientDetails) return;
 
     return (
-      <div className={styles.patientDetails}>
+      <div>
         <div>Patient Details</div>
         <div>Name: {props.patientDetails.PatientName}</div>
         <div>Date of Birth: {props.patientDetails.DateOfBirth}</div>
@@ -130,9 +132,9 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
 
   return (
     <>
-      <Container maxWidth="sm">
+      <Container maxWidth="lg">
         <Grid container
-        justify="center"
+        justify="space-around"
         alignItems="flex-start">
         {/* <Button variant="contained" onClick={() => alert('not implemented')}>
           Disconnect
@@ -142,8 +144,8 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
         </Grid>
         <Grid item xs={3}>
             <video muted ref={localVideo} className={styles.videoSmall} />
+            {renderPatientDetails()} 
         </Grid>
-        {renderPatientDetails()} 
         <audio ref={audioElement} />
         </Grid>
       </Container>
