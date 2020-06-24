@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { makeStyles, Theme, createStyles, Button, Container, Grid } from '@material-ui/core';
+import { makeStyles, Theme, createStyles, Button, Container, Grid, IconButton } from '@material-ui/core';
+import MicIcon from '@material-ui/icons/Mic';
+import MicOffIcon from '@material-ui/icons/MicOff';
+
 import { IPatientDetails } from './Patient/PatientDetails';
 import { useChimeContext } from '../context/ChimeSdk';
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -93,6 +97,7 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
   const localVideo = React.useRef<HTMLVideoElement>(null!);
   const audioElement = React.useRef<HTMLAudioElement>(null!);
   const chime = useChimeContext();
+  const [muted, setMuted] = useState(false);
 
   React.useEffect(() => {
       startMeeting();
@@ -114,6 +119,11 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
       return <div className={styles.title}>We have told {props.participantName ? props.participantName : "The doctor"} you've arrived. They will be with you shortly</div>;
     }
   };
+
+  const toggleMute = () => {
+    chime.toggleMute();
+    setMuted(chime.isMuted());
+  }
 
   const renderPatientDetails = () => {
     if (!props.patientDetails) return;
@@ -144,6 +154,9 @@ export const AireRoom: React.FC<IAireRoomProps> = (props: IAireRoomProps) => {
         </Grid>
         <Grid item xs={3}>
             <video muted ref={localVideo} className={styles.videoSmall} />
+            <IconButton onClick={toggleMute} color="secondary" aria-label="Toggle mute">
+              {muted ? <MicOffIcon/> : <MicIcon/>}
+            </IconButton>
             {renderPatientDetails()} 
         </Grid>
         <audio ref={audioElement} />

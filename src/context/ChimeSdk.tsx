@@ -13,6 +13,8 @@ export interface IChimeContext {
     state: 'initialising' | 'initialised' | 'ready' | 'joined';
     participants: any[];
     meetingId: string;
+    toggleMute: () => void;
+    isMuted: () => boolean;
 }
 
 export const ChimeContext = createContext<IChimeContext>(null!);
@@ -39,6 +41,15 @@ export const ChimeProvider = (props: any) => {
         setMeetingSession(meetingSession);
         setState('initialised')
         setMeetingId(JSON.stringify(meetingInfo));
+    }
+
+    const toggleMute = async () => {
+        meetingSession.audioVideo.realtimeIsLocalAudioMuted() ? 
+        meetingSession.audioVideo.realtimeUnmuteLocalAudio() : meetingSession.audioVideo.realtimeMuteLocalAudio(); 
+    }
+
+    const isMuted = () : boolean => {
+        return meetingSession.audioVideo.realtimeIsLocalAudioMuted();
     }
 
     const startPreview = async (videoElement: HTMLVideoElement) => {
@@ -103,7 +114,9 @@ export const ChimeProvider = (props: any) => {
             audioVideo,
             state,
             participants,
-            meetingId}} >
+            meetingId,
+            toggleMute,
+            isMuted}} >
             {props.children}
         </ChimeContext.Provider>
     )
